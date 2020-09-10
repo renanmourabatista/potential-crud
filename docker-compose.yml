@@ -1,0 +1,41 @@
+version: "2.2"
+services:
+  pontential_api:
+    image: hitalos/laravel:latest
+    container_name: pontential_api
+    ports:
+      - 88:80
+    volumes:
+      - ./api:/var/www
+    links:
+      - pontential_db
+    environment:
+      DB_HOST: pontential_db
+      DB_DATABASE: pontential
+      DB_USERNAME: pontential-dev
+      DB_PASSWORD: p455w0rd
+      DB_CONNECTION: mysql
+    command: >
+      sh -c "echo -e 'zend_extension=xdebug
+        xdebug.idekey=PHPSTORM
+        xdebug.remote_host=172.18.0.1
+        xdebug.remote_enable=1
+        xdebug.remote_port=9000
+        xdebug.remote_autostart=1
+        xdebug.remote_connect_back=0
+        xdebug.remote_handler=dbgp
+        xdebug.idekey=PHPSTORM' > /usr/local/etc/php/conf.d/xdebug.ini &&
+        composer create-project --prefer-dist laravel/laravel api &&
+        php artisan migrate &&
+        php artisan serve --port=80 --host=0.0.0.0"
+
+  pontential_db:
+    image: mysql:5.7
+    container_name: pontential_db
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: pontential
+      MYSQL_USER: pontential-dev
+      MYSQL_PASSWORD: p455w0rd
+      MYSQL_ROOT_PASSWORD: root
