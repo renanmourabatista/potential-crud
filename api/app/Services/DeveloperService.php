@@ -21,28 +21,46 @@ class DeveloperService
         $this->repository = $repository;
     }
 
-    public function create(array $data): Developer
+    public function create(array $data): array
     {
-        return $this->repository->create($data);
+        $developer = $this->repository->create($data);
+
+        return [
+            'message' => trans('messages.developers.create_success'),
+            'data'    => $developer
+        ];
     }
 
-    public function update(array $data, int $id): Developer
+    public function update(array $data, int $id): array
     {
-        return $this->repository->update($data, $id);
+        $developer = $this->repository->update($data, $id);
+
+        if (!$developer) {
+            throw new NotFoundHttpException(trans('exceptions.developers.not_found'));
+        }
+
+        return [
+            'message' => trans('messages.developers.update_success'),
+            'data'    => $developer
+        ];
     }
 
-    public function remove(int $id): void
+    public function remove(int $id): array
     {
         $deleted = $this->repository->delete($id);
 
         if (!$deleted) {
             throw new BadRequestHttpException(trans('exceptions.developers.remove_error'));
         }
+
+        return [
+            'message' => trans('messages.developers.remove_success')
+        ];
     }
 
     public function getById(int $id): ?Developer
     {
-        $developer = $this->repository->find($id);
+        $developer = $this->repository->getById($id);
 
         if (!$developer) {
             throw new NotFoundHttpException(trans('exceptions.developers.not_found'));

@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/developers/{id}', 'App\Http\Controllers\DeveloperController@get')->name('developer.get');
+Route::delete('/developers/{id}', 'App\Http\Controllers\DeveloperController@remove')->name('developer.remove');
+Route::put('/developers/{id}', 'App\Http\Controllers\DeveloperController@update')->name('developer.update');
+Route::get('/developers', 'App\Http\Controllers\DeveloperController@search')->name('developer.search');
+Route::post('/developers', 'App\Http\Controllers\DeveloperController@create')->name('developer.create');

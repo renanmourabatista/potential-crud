@@ -14,5 +14,5 @@ interface RepositoryInterface
 
     public function create(array $parameters): Model;
 
-    public function update(array $parameters, int $id): Model;
+    public function update(array $parameters, int $id): ?Model;
 }

@@ -8,6 +8,17 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class DeveloperRepository implements DeveloperRepositoryInterface
 {
+    private array $likableFields = [
+        'nome',
+        'hobby'
+    ];
+
+    private array $exactlyMatchFields = [
+        'idade',
+        'sexo',
+        'data_nascimento'
+    ];
+
     public function model(): string
     {
         return Developer::class;
@@ -20,7 +31,7 @@ class DeveloperRepository implements DeveloperRepositoryInterface
 
     public function delete(int $id): bool
     {
-        $developer = $this->find($id);
+        $developer = $this->getById($id);
 
         if(!$developer) {
             return false;
@@ -34,9 +45,14 @@ class DeveloperRepository implements DeveloperRepositoryInterface
         return $this->model()::create($parameters);
     }
 
-    public function update(array $parameters, int $id): Developer
+    public function update(array $parameters, int $id): ?Developer
     {
-        $developer = $this->find($id);
+        $developer = $this->getById($id);
+
+        if(!$developer) {
+            return null;
+        }
+
         $developer->update($parameters);
 
         return $developer;
@@ -44,6 +60,19 @@ class DeveloperRepository implements DeveloperRepositoryInterface
 
     public function search(array $data): LengthAwarePaginator
     {
-        // TODO: Implement search() method.
+        $queryBuilder          = $this->model()::query();
+        $itensPerPage          = 10;
+
+        foreach ($data as $field => $value) {
+            if(in_array($field, $this->exactlyMatchFields)) {
+                $queryBuilder->where($field, '=', $value);
+            }
+
+            if(in_array($field, $this->likableFields)) {
+                $queryBuilder->where($field, 'like', '%'. $value.'%');
+            }
+        }
+
+        return $queryBuilder->paginate($itensPerPage);
     }
 }

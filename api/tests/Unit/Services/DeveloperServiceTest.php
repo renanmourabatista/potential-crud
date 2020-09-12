@@ -37,12 +37,18 @@ class DeveloperServiceTest extends TestCase
     public function shouldCreateADeveloper()
     {
         $data = [];
-        $expectedResult = Developer::factory()->make();
+
+        $developer = Developer::factory()->make();
+
+        $expectedResult = [
+            'message' => trans('messages.developers.create_success'),
+            'data'    => $developer
+        ];
 
         $this->repository
             ->shouldReceive('create')
             ->with($data)
-            ->andReturn($expectedResult)
+            ->andReturn($developer)
             ->once();
 
         $result = $this->service->create($data);
@@ -55,7 +61,10 @@ class DeveloperServiceTest extends TestCase
      */
     public function shouldRemoveADeveloper()
     {
-        $id = $this->faker->randomNumber(2);
+        $id             = $this->faker->randomNumber(2);
+        $expectedResult = [
+            'message' => trans('messages.developers.remove_success')
+        ];
 
         $this->repository
             ->shouldReceive('delete')
@@ -63,7 +72,9 @@ class DeveloperServiceTest extends TestCase
             ->andReturnTrue()
             ->once();
 
-        $this->service->remove($id);
+        $result = $this->service->remove($id);
+
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
@@ -75,7 +86,7 @@ class DeveloperServiceTest extends TestCase
         $expectedDeveloper = Developer::factory()->make();
 
         $this->repository
-            ->shouldReceive('find')
+            ->shouldReceive('getById')
             ->with($id)
             ->andReturn($expectedDeveloper)
             ->once();
@@ -94,7 +105,7 @@ class DeveloperServiceTest extends TestCase
         $id = $this->faker->randomNumber(2);
 
         $this->repository
-            ->shouldReceive('find')
+            ->shouldReceive('getById')
             ->with($id)
             ->andReturnNull();
 
@@ -124,18 +135,43 @@ class DeveloperServiceTest extends TestCase
      */
     public function shouldUpdateADeveloper()
     {
-        $data           = [];
-        $expectedResult = Developer::factory()->make(['id' => $this->faker->randomDigit]);
+        $data      = [];
+        $developer = Developer::factory()->make(['id' => $this->faker->randomDigit]);
+
+        $expectedResult = [
+            'message' => trans('messages.developers.update_success'),
+            'data'    => $developer
+        ];
 
         $this->repository
             ->shouldReceive('update')
-            ->with($data, $expectedResult->id)
-            ->andReturn($expectedResult)
+            ->with($data, $developer->id)
+            ->andReturn($developer)
             ->once();
 
-        $result = $this->service->update($data, $expectedResult->id);
+        $result = $this->service->update($data, $developer->id);
 
         $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldFailToUpdateADeveloperWhenNotExists()
+    {
+        $data = [];
+        $id   = $this->faker->randomDigit;
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->expectErrorMessage(trans('exceptions.developers.not_found'));
+
+        $this->repository
+            ->shouldReceive('update')
+            ->with($data, $id)
+            ->andReturnNull()
+            ->once();
+
+        $this->service->update($data, $id);
     }
 
     /**
@@ -144,7 +180,7 @@ class DeveloperServiceTest extends TestCase
     public function shouldSearchADeveloper()
     {
         $data           = [];
-        $expectedResult =  \Mockery::mock(LengthAwarePaginator::class);
+        $expectedResult = \Mockery::mock(LengthAwarePaginator::class);
 
         $expectedResult
             ->shouldReceive('isEmpty')
