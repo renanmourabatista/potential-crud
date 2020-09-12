@@ -16,7 +16,6 @@ use Tests\TestCase;
 
 class DeveloperServiceTest extends TestCase
 {
-
     private DeveloperService $service;
 
     private MockInterface $repository;

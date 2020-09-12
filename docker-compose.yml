@@ -1,18 +1,19 @@
 version: "2.2"
 services:
-  pontential_api:
+  potential_api:
     image: hitalos/laravel:latest
-    container_name: pontential_api
+    container_name: potential_api
     ports:
       - 88:80
     volumes:
       - ./api:/var/www
     links:
-      - pontential_db
+      - potential_db
+      - potential_db_test
     environment:
-      DB_HOST: pontential_db
-      DB_DATABASE: pontential
-      DB_USERNAME: pontential-dev
+      DB_HOST: potential_db
+      DB_DATABASE: potential
+      DB_USERNAME: potential-dev
       DB_PASSWORD: p455w0rd
       DB_CONNECTION: mysql
     command: >
@@ -28,13 +29,24 @@ services:
         php artisan migrate &&
         php artisan serve --port=80 --host=0.0.0.0"
 
-  pontential_db:
+  potential_db:
     image: mysql:5.7
-    container_name: pontential_db
+    container_name: potential_db
     ports:
       - 3307:3306
     environment:
-      MYSQL_DATABASE: pontential
-      MYSQL_USER: pontential-dev
+      MYSQL_DATABASE: potential
+      MYSQL_USER: potential-dev
+      MYSQL_PASSWORD: p455w0rd
+      MYSQL_ROOT_PASSWORD: root
+
+  potential_db_test:
+    image: mysql:5.7
+    container_name: potential_db_test
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_DATABASE: potential
+      MYSQL_USER: potential-dev
       MYSQL_PASSWORD: p455w0rd
       MYSQL_ROOT_PASSWORD: root
