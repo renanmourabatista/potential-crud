@@ -50,3 +50,16 @@ services:
       MYSQL_USER: potential-dev
       MYSQL_PASSWORD: p455w0rd
       MYSQL_ROOT_PASSWORD: root
+
+  potential_front:
+      image: node:12
+      container_name: potential_front
+      tty: true
+      ports:
+        - 3000:3000
+      volumes:
+        - ./front:/var/www
+      links:
+        - potential_api
+      command: >
+        sh -c "cd /var/www && npm i && npm start"
