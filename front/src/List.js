@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function List(props) {
 
     const [error, setError] = useState('');
-    const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const [paginationItems, setPaginationItems] = useState([]);
 
@@ -17,7 +16,6 @@ function List(props) {
             .then(res => res.json())
             .then(
                 (result) => {
-                    setIsLoaded(true);
                     setItems(result.data);
                     let pages = [];
                     let active = result.current_page;
@@ -34,10 +32,30 @@ function List(props) {
                 },
 
                 (error) => {
-                    setIsLoaded(true);
                     setError(error);
                 }
             )
+    }
+
+    let removeDeveloper = function(e)
+    {
+        let id = e.target.getAttribute('data-id');
+
+        if(window.confirm('Deseja remover o desenvolvedor?')) {
+            const options = {
+                method: 'DELETE'
+            }
+
+            fetch(url+'/'+id, options)
+                .then(
+                    (result) => {
+                        props.setRefreshList(true);
+                    },
+                    (error) => {
+                        console.log(error.message);
+                    }
+                )
+        }
     }
 
     const pageClick = function(e){
@@ -54,9 +72,6 @@ function List(props) {
 
     useEffect(() => {
         getItems(url)
-        if(props.refreshList) {
-            getItems(url);
-        }
     }, [])
 
     if (props.refresh) {
@@ -67,8 +82,6 @@ function List(props) {
 
     if (!items) {
         return( <Container> <div>Nenhum item encontrado!</div> </Container>);
-    } else if (!isLoaded) {
-        return <div>Loading...</div>;
     }
 
     return (
@@ -92,7 +105,7 @@ function List(props) {
                             <td>{item.data_nascimento}</td>
                             <td>
                                 <Button data-id={item.id} variant="primary" onClick={editDeveloper}>Editar</Button>
-                                <Button variant="danger">Remover</Button>
+                                <Button data-id={item.id} variant="danger" onClick={removeDeveloper}>Remover</Button>
                             </td>
                         </tr>
                     ))}
