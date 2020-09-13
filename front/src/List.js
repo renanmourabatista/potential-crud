@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Button,Container,Row,Col,Table, Pagination } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function List() {
+function List(props) {
 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -40,14 +40,28 @@ function List() {
             )
     }
 
-    let pageChanged = function(e){
+    const pageClick = function(e){
         const page = e.target.getAttribute('data-page');
         getItems(url+'?page='+page);
     }
 
+    const editDeveloper = function (e)
+    {
+        let id = e.target.getAttribute('data-id');
+        props.setSelectedDeveloperToEdit(id);
+    }
+
     useEffect(() => {
         getItems(url)
+        if(props.refreshList) {
+            getItems(url);
+        }
     }, [])
+
+    if (props.refresh) {
+        props.setRefreshList(false);
+       getItems(url);
+    }
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -75,14 +89,17 @@ function List() {
                             <td>{item.nome}</td>
                             <td>{item.hobby}</td>
                             <td>{item.data_nascimento}</td>
-                            <td> <Button variant="primary">Editar</Button>  <Button variant="danger">Remover</Button></td>
+                            <td>
+                                <Button data-id={item.id} variant="primary" onClick={editDeveloper}>Editar</Button>
+                                <Button variant="danger">Remover</Button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
             <Row>
                 <Col>
-                    <Pagination onClick={pageChanged} >{paginationItems}</Pagination>
+                    <Pagination onClick={pageClick} >{paginationItems}</Pagination>
                 </Col>
             </Row>
         </Container>
