@@ -12,6 +12,7 @@ function App() {
     const [showFormSearch, setShowFormSearch] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
     const [selectedDeveloperToEdit, setSelectedDeveloperToEdit] = useState(false);
+    const [filterQueryString, setFilterQueryString] = useState(false);
 
     const showFormCreate = () => setShowForm(true);
     const showSearchForm = () => setShowFormSearch(true);
@@ -30,7 +31,12 @@ function App() {
                         <Button onClick={showSearchForm} className="float-right mb-2" variant="primary">Buscar</Button>
                     </Col>
                 </Row>
-                <List setSelectedDeveloperToEdit={setSelectedDeveloperToEdit} setRefreshList={setRefreshList} refresh={refreshList}/>
+                <List
+                    filterQueryString={filterQueryString}
+                    setSelectedDeveloperToEdit={setSelectedDeveloperToEdit}
+                    setRefreshList={setRefreshList}
+                    refresh={refreshList}
+                />
                 <FormDeveloper
                     setSelectedDeveloperToEdit={setSelectedDeveloperToEdit}
                     selectedDeveloperToEdit={selectedDeveloperToEdit}
@@ -42,6 +48,7 @@ function App() {
                     setRefreshList={setRefreshList}
                     setShowForm={setShowFormSearch}
                     show={showFormSearch}
+                    setFilterQueryString={setFilterQueryString}
                 />
             </Container>
         </div>

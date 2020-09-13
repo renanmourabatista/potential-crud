@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function List(props) {
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const [paginationItems, setPaginationItems] = useState([]);
@@ -42,7 +42,8 @@ function List(props) {
 
     const pageClick = function(e){
         const page = e.target.getAttribute('data-page');
-        getItems(url+'?page='+page);
+        const filterQuery = props.filterQueryString;
+        getItems(url+'?page='+page+'&'+filterQuery);
     }
 
     const editDeveloper = function (e)
@@ -60,11 +61,12 @@ function List(props) {
 
     if (props.refresh) {
         props.setRefreshList(false);
-       getItems(url);
+        const filterQuery = props.filterQueryString;
+        getItems(url + '?' + filterQuery);
     }
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
+    if (!items) {
+        return( <Container> <div>Nenhum item encontrado!</div> </Container>);
     } else if (!isLoaded) {
         return <div>Loading...</div>;
     }
@@ -82,7 +84,6 @@ function List(props) {
                 </tr>
                 </thead>
                 <tbody>
-
                     {items.map(item => (
                         <tr key={item.id}>
                             <td>{item.id}</td>

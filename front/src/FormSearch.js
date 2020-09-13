@@ -2,14 +2,12 @@ import {Button, Modal, Form} from "react-bootstrap";
 import React, {useState} from "react";
 
 function FormSearch(props) {
-    const url =  'http://localhost:88/api/developers?';
 
     const [nome, setNome] = useState('');
     const [dataNascimento, setDataNascimento] = useState('');
     const [idade, setIdade] = useState('');
     const [sexo, setSexo] = useState('');
     const [hobby, setHobby] = useState('');
-    const [developerId, setDeveloperId] = useState('');
 
     const updateNome = function (e) {
         setNome(e.target.value)
@@ -32,22 +30,11 @@ function FormSearch(props) {
     }
 
     const handleClose = function () {
-        resetForm();
         props.setShowForm(false)
     };
 
     const refreshList =  function () {
         props.setRefreshList(true);
-    }
-
-    let save = function()
-    {
-        if(developerId) {
-            update(url, developerId);
-            return;
-        }
-
-        create(url);
     }
 
     const resetForm = function () {
@@ -58,69 +45,37 @@ function FormSearch(props) {
         setHobby('')
     }
 
-    const getBodyData = function()
+    const getSearchQueryString = function()
     {
-       return JSON.stringify({
-            "nome": nome,
-            "data_nascimento": dataNascimento,
-            "idade": idade,
-            "sexo": sexo,
-            "hobby": hobby,
-        })
-    }
+        let query = '';
 
-    const handleApiResponse = function(result) {
-            let message = result.message + '\n';
-
-            if(result.errors) {
-                for(let i in result.errors) {
-                    message += result.errors[i][0] + '\n';
-                }
-            } else {
-                resetForm();
-                handleClose();
-                refreshList();
-                setDeveloperId('');
-            }
-
-            alert(message);
-    }
-
-    const create = function(url)
-    {
-        const options = {
-            headers: {'Content-Type':'application/json'},
-            method: 'POST',
-            body: getBodyData()
+        if(nome) {
+            query = 'nome='+nome
         }
 
-        fetch(url, options)
-            .then(res => res.json())
-            .then(
-                (result) => handleApiResponse (result),
-                (error) => {
-                    console.log(error.message);
-                }
-            )
+        query += getParameterQueryString("data_nascimento", dataNascimento)
+        query += getParameterQueryString("idade", idade)
+        query += getParameterQueryString("sexo", sexo)
+        query += getParameterQueryString("hobby", hobby)
+
+        return query;
     }
 
-    const update = function(url, id)
+    const getParameterQueryString = function(name, value)
     {
-        const options = {
-            headers: {'Content-Type':'application/json'},
-            method: 'PUT',
-            body: getBodyData()
+        if(value) {
+            return '&'+name+'='+value
         }
 
-        fetch(url + '/'+id, options)
-            .then(res => res.json())
-            .then(
-                (result) => handleApiResponse (result),
+        return '';
+    }
 
-                (error) => {
-                    console.log(error.message);
-                }
-            )
+    const search = function()
+    {
+        let queryString = getSearchQueryString();
+        props.setFilterQueryString(queryString);
+        refreshList();
+        props.setShowForm(false);
     }
 
     return (
@@ -146,8 +101,8 @@ function FormSearch(props) {
                         <Form.Label>Sexo</Form.Label>
                         <Form.Control value={sexo} onChange={updateSexo} name="sexo"  as="select" custom>
                             <option value="">Escolha</option>
-                            <option>M</option>
-                            <option>F</option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="form.hobby">
@@ -160,7 +115,7 @@ function FormSearch(props) {
                 <Button variant="secondary" onClick={handleClose}>
                     Cancelar
                 </Button>
-                <Button variant="primary" onClick={save}>
+                <Button variant="primary" onClick={search}>
                     Buscar
                 </Button>
             </Modal.Footer>

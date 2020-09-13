@@ -185,8 +185,8 @@ function FormDeveloper(props) {
                         <Form.Label>Sexo</Form.Label>
                         <Form.Control value={sexo} onChange={updateSexo} name="sexo"  as="select" custom>
                             <option value="">Escolha</option>
-                            <option>M</option>
-                            <option>F</option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="form.hobby">
