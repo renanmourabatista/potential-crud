@@ -73,6 +73,6 @@ class DeveloperRepository implements DeveloperRepositoryInterface
             }
         }
 
-        return $queryBuilder->paginate($itensPerPage);
+        return $queryBuilder->orderBy('id', 'DESC')->paginate($itensPerPage);
     }
 }

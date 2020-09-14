@@ -2,7 +2,7 @@
 
 return [
     'developers' => [
-        'validation' => [
+        'validation'     => [
             'nome_required'               => 'Nome é um campo obrigatório.',
             'sexo_required'               => 'Selecione o sexo.',
             'sexo_in'                     => 'Sexo inválido.',
@@ -10,10 +10,11 @@ return [
             'idade_numeric'               => 'Idade deve ser um numero.',
             'hobby_required'              => 'Hobby é um campo obrigatório.',
             'data_nascimento_required'    => 'Data de nascimento é um campo obrigatório.',
-            'data_nascimento_date_format' => 'Data de nascimento inválida, o formato correto é AAAA-MM-DD.'
+            'data_nascimento_date_format' => 'Data de nascimento inválida, o formato correto é AAAA-MM-DD.',
+            'idade_compativel'            => 'Idade não é compatível com a data de nascimento.'
         ],
-        'remove_success' =>  'Desenvolvedor removido com sucesso.',
-        'create_success' =>  'Desenvolvedor adicionado com sucesso.',
-        'update_success' =>  'Desenvolvedor atualizado com sucesso.',
+        'remove_success' => 'Desenvolvedor removido com sucesso.',
+        'create_success' => 'Desenvolvedor adicionado com sucesso.',
+        'update_success' => 'Desenvolvedor atualizado com sucesso.',
     ]
 ];
