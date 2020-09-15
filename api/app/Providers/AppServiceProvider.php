@@ -34,9 +34,9 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $dataAtual      = Carbon::now();
-            $dataNascimento = Carbon::createFromFormat('Y-m-d', $data);
+            $dataNascimento = Carbon::createFromFormat('Y-m-d', $data)->startOfDay();
 
-            return $dataAtual->diffInYears($dataNascimento) == $value;
+            return $dataAtual->endOfDay()->diffInYears($dataNascimento) == $value;
         });
     }
 }

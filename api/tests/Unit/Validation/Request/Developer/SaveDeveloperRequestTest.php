@@ -21,7 +21,7 @@ class SaveDeveloperRequestTest extends AbstractRequestTest
         return [
             [['nome' => 'required']],
             [['sexo' => 'required|in:M,F']],
-            [['idade' => 'required|numeric']],
+            [['idade' => 'required|numeric|idade_compativel']],
             [['hobby' => 'required']],
             [['data_nascimento' => 'required|date_format:Y-m-d']],
         ];
@@ -37,6 +37,7 @@ class SaveDeveloperRequestTest extends AbstractRequestTest
             [['sexo.in' => trans('messages.developers.validation.sexo_in')]],
             [['idade.required' => trans('messages.developers.validation.idade_required')]],
             [['idade.numeric' => trans('messages.developers.validation.idade_numeric')]],
+            [['idade.idade_compativel' => trans('messages.developers.validation.idade_compativel')]],
             [['hobby.required' => trans('messages.developers.validation.hobby_required')]],
             [['data_nascimento.required' => trans('messages.developers.validation.data_nascimento_required')]],
             [['data_nascimento.date_format' => trans('messages.developers.validation.data_nascimento_date_format')]],

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Developer;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Response;
 use Tests\FeatureTestCase;
@@ -20,18 +21,28 @@ class DeveloperTest extends FeatureTestCase
         $this->developer = Developer::factory()->create();
     }
 
+
+    private function getDataToSaveDeveloper(): array
+    {
+        $age       = $this->faker->numberBetween(1, 99);
+        $birthDate = Carbon::now();
+        $birthDate->subYears($age);
+
+        return [
+            'nome'            => $this->faker->name,
+            'sexo'            => $this->faker->randomElement(['M', 'F']),
+            'idade'           => $age,
+            'hobby'           => $this->faker->word,
+            'data_nascimento' => $birthDate->toDateString()
+        ];
+    }
+
     /**
      * @test
      */
     public function shouldCreateADeveloperWithSuccess()
     {
-        $data = [
-            'nome'            => $this->faker->name,
-            'sexo'            => $this->faker->randomElement(['M', 'F']),
-            'idade'           => $this->faker->numberBetween(1, 99),
-            'hobby'           => $this->faker->word,
-            'data_nascimento' => $this->faker->date()
-        ];
+        $data = $this->getDataToSaveDeveloper();
 
         $response = $this->post('api/developers', $data);
 
@@ -43,13 +54,7 @@ class DeveloperTest extends FeatureTestCase
      */
     public function shouldUpdateADeveloperWithSuccess()
     {
-        $data = [
-            'nome'            => $this->faker->name,
-            'sexo'            => $this->faker->randomElement(['M', 'F']),
-            'idade'           => $this->faker->numberBetween(1, 99),
-            'hobby'           => $this->faker->word,
-            'data_nascimento' => $this->faker->date()
-        ];
+        $data = $this->getDataToSaveDeveloper();
 
         $response = $this->put('api/developers/'.$this->developer->id, $data);
 
