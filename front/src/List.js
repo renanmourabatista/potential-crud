@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Button,Container,Row,Col,Table, Pagination } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Moment from "react-moment";
 
 function List(props) {
 
@@ -102,7 +103,7 @@ function List(props) {
                             <td>{item.id}</td>
                             <td>{item.nome}</td>
                             <td>{item.hobby}</td>
-                            <td>{item.data_nascimento}</td>
+                            <td><Moment format="DD/MM/YYYY">{item.data_nascimento}</Moment></td>
                             <td>
                                 <Button data-id={item.id} variant="primary" onClick={editDeveloper}>Editar</Button>
                                 <Button data-id={item.id} variant="danger" onClick={removeDeveloper}>Remover</Button>

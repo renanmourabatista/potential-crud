@@ -26,17 +26,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend('idade_compativel', function ($attribute, $value, $parameters, $validator) {
+            $date = request()->get('data_nascimento');
 
-            $data = request()->get('data_nascimento');
-
-            if(!$data) {
+            if (!$date) {
                 return false;
             }
 
-            $dataAtual      = Carbon::now();
-            $dataNascimento = Carbon::createFromFormat('Y-m-d', $data)->startOfDay();
+            $dateNow   = Carbon::now();
+            $birthDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
 
-            return $dataAtual->endOfDay()->diffInYears($dataNascimento) == $value;
+            return $dateNow->endOfDay()->diffInYears($birthDate) == $value;
         });
     }
 }
