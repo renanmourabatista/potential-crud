@@ -17,9 +17,7 @@ services:
       DB_PASSWORD: p455w0rd
       DB_CONNECTION: mysql
     command: >
-      sh -c "
-        php artisan migrate &&
-        php artisan serve --port=80 --host=0.0.0.0"
+      sh -c "php artisan serve --port=80 --host=0.0.0.0"
 
   potential_db:
     image: mysql:5.7

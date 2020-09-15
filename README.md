@@ -5,10 +5,22 @@
   * Docker versão 19.03.12 
   
 * Para iniciar o projeto basta executar o `docker-compose up`, esse comando já possui todas as instruções no arquivo 
-docker-compose.yml para instalar todas as dependencias, criar o banco de dados e iniciar o server para as aplicações de
+docker-compose.yml para instalar todas as dependencias e iniciar o server para as aplicações de
 **front** e **api**
 
 ## API
+
+### inicializar o banco
+  * `docker exec -it potential_api php artisan migrate`
+  
+### Testes na API
+  
+ Executar os testes unitários:
+  * `docker exec -it potential_api phpunit --configuration phpunit.xml --testsuit=Unit`
+    
+ Executar os testes de integração:
+  * `docker exec -it potential_api phpunit --configuration phpunit.xml --testsuit=Feature`
+
 ### Detalhes da implementação
 
 * Foi utilizado para implementar a API o framework Laravel, utilizando a linguagem de programação **PHP 7.4**, a API 
@@ -29,14 +41,6 @@ esta dividida nas seguintes camadas:
 ### Postman
 
 * Você pode baixar uma collection do postman para testar os endpoints da API [Clicando aqui](https://www.getpostman.com/collections/90b9c140a92c4175ed70)
-
-### Testes na API
-
- Executar os testes unitários:
-  * `docker exec -it potential_api phpunit --configuration phpunit.xml --testsuit=Unit`
-  
- Executar os testes de integração:
-  * `docker exec -it potential_api phpunit --configuration phpunit.xml --testsuit=Feature`
   
 ## Front
   * O front foi implementado utilizando **React** 
